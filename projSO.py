@@ -2,8 +2,10 @@ class processo():
     def __init__(self,nome, entrada,tempo,IOs):
         self.nome = nome
         self.entrada = int(entrada)
-        self.decorrido = int(0)
+        self.saida = 0
+        self.decorrido = 0
         self.tempo = int(tempo)
+        self.historico = []
         if IOs == False:
             self.IOs = [0]
         else:
@@ -16,6 +18,7 @@ class processo():
 ##variaveis que podem ser mudadas
 arquivoentrada = "listaprocessos.txt" ##nome do arquivo de entrada
 arquivosaida = "resultados.txt" ##nome do arquivo de saida
+arquivografico = "grafico.txt"
 quantum = 4 ##variavel que controla quantum
 
 
@@ -37,16 +40,19 @@ for linha in arq:
     p1 = processo(linha[0],linha[1],linha[2],paradas)
     processos.append(p1)
 arq.close()
+
 for i in processos:
     print(i)
+    
 arqresposta = open(arquivosaida,"w")
+
 print("\n\nESCALONANDO OS ROBINS REDONDOS!\n")
 tempo = 0
 stack = []
 processando = False
 esperas = []
 quantumatual = 0
-while(True): ##continua ate processos estiver vazio! (PROBLEMAS! vai dar merda se tiver stack vazia quando entrar em processando!)
+while(True): ##continua ate processos estiver vazio! 
     removidos = []
     arqresposta.write(f"TEMPO: {tempo}\n")
     print(f"TEMPO: {tempo}")
@@ -55,7 +61,9 @@ while(True): ##continua ate processos estiver vazio! (PROBLEMAS! vai dar merda s
         if processando.decorrido == processando.tempo: ##teminou processo!
             arqresposta.write(f"EVENTO: {processando.nome} TERMINOU DE PROCESSAR!\n")
             print(f"EVENTO: {processando.nome} TERMINOU DE PROCESSAR!")
-            esperas.append([processando.nome,processando.entrada,tempo])
+            processando.saida = tempo ##adiciona o tempo do ultimo processo
+            processando.historico.append(tempo) ##adiciona o tempo para o historico
+            esperas.append(processando)
 
             processando = False
             quantumatual = 0
@@ -105,8 +113,8 @@ while(True): ##continua ate processos estiver vazio! (PROBLEMAS! vai dar merda s
         print("VAZIA!")
     else:
         for i in stack:
-            arqresposta.write(f"{i.nome}({i.tempo}) ")
-            print(f"{i.nome}({i.tempo}) ")
+            arqresposta.write(f"{i.nome}({i.tempo-i.decorrido}) ")
+            print(f"{i.nome}({i.tempo-i.decorrido}) ")
             
         
         arqresposta.write("\n")
@@ -118,6 +126,7 @@ while(True): ##continua ate processos estiver vazio! (PROBLEMAS! vai dar merda s
     else:
         arqresposta.write(f"CPU: {processando.nome}({processando.tempo - processando.decorrido})\n")
         print(f"CPU: {processando.nome}({processando.tempo - processando.decorrido})")
+        processando.historico.append(tempo)
         processando.decorrido += 1
         quantumatual +=1
     tempo+=1
@@ -127,12 +136,29 @@ arqresposta.write("ESPERAS:\n")
 print("ESPERAS:")
 mediaespera = 0
 for i in esperas:
-    arqresposta.write(f"{i[0]}: {i[2]-i[1]}\n")
-    print(i) ##esperas de cada processo
-    print(f"Espera {i[0]}: {i[2]-i[1]}")
-    mediaespera += i[2] - i[1]
+    arqresposta.write(f"{i.nome}: {i.saida-i.entrada}\n")
+    print(f"{i.nome}") ##esperas de cada processo
+    print(f"Espera {i.nome}: {i.saida-i.entrada}")
+    mediaespera += i.saida-i.entrada
 
 mediaespera = mediaespera/len(esperas)
 arqresposta.write(f"\nMedia: {mediaespera}")
 print(f"\nMedia: {mediaespera}")
 arqresposta.close()
+arqgraf = open(arquivografico,"w")
+for i in esperas:
+    stringProcesso = ""
+    ultimoProcesso=0
+    print(f"{i.nome}:{i.historico}")
+    for tempoProcesso in i.historico:
+        for m in range(ultimoProcesso,tempoProcesso):
+            stringProcesso +=" "
+        if tempoProcesso == i.historico[-1]: ##ve se eh o ultimo, logo eh o caso de saida!
+            stringProcesso+="!"
+        else:
+            stringProcesso += "#"
+            
+        ultimoProcesso=tempoProcesso+1
+    arqgraf.write(f"{i.nome}:{stringProcesso}\n")
+      
+arqgraf.close()
