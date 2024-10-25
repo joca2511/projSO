@@ -1,3 +1,4 @@
+import sys
 class processo():
     def __init__(self,nome, entrada,tempo,IOs):
         self.nome = nome
@@ -16,10 +17,22 @@ class processo():
         return f"Nome: {self.nome}\nEntrada: {self.entrada}\nTempo: {self.tempo}\nInterrupcoes: {self.IOs}"
     
 ##variaveis que podem ser mudadas
+
 arquivoentrada = "listaprocessos.txt" ##nome do arquivo de entrada
 arquivosaida = "resultados.txt" ##nome do arquivo de saida
 arquivografico = "grafico.txt"
 quantum = 4 ##variavel que controla quantum
+
+argumentos = sys.argv
+print(sys.argv)
+if len(argumentos) >1: ##caso tam seja 1, quer dizer que nao possui argumentos!
+    quantum = int(argumentos[1])
+    if len(argumentos)>2:
+        arquivoentrada = argumentos[2]
+        if len(argumentos)>3:
+            arquivosaida = argumentos[3]
+            if len(argumentos)>4:
+                arquivografico = argumentos[4]
 
 
 
