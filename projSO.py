@@ -1,4 +1,4 @@
-import sys
+import argparse
 class processo():
     def __init__(self,nome, entrada,tempo,IOs):
         self.nome = nome
@@ -16,23 +16,26 @@ class processo():
     def __str__(self):
         return f"Nome: {self.nome}\nEntrada: {self.entrada}\nTempo: {self.tempo}\nInterrupcoes: {self.IOs}"
     
-##variaveis que podem ser mudadas
+##criacao de parser para argumentos
+parser = argparse.ArgumentParser(
+    prog="projSO",
+    description="Programa que simula Round-Robin"
+)
+parser.add_argument("-e","--entrada",help="Arquivo de entrada",default="listaprocessos.txt")
+parser.add_argument("-s","--saida",help="Arquivo de saida",default="resultados.txt")
+parser.add_argument("-q","--quantum",help="Valor de Quantum",default=4,type=int)
+parser.add_argument("-g","--grafico",help="Arquivo de grafico",default="grafico.txt")
+args = parser.parse_args()
+print(args)
 
-arquivoentrada = "listaprocessos.txt" ##nome do arquivo de entrada
-arquivosaida = "resultados.txt" ##nome do arquivo de saida
-arquivografico = "grafico.txt"
-quantum = 4 ##variavel que controla quantum
 
-argumentos = sys.argv
-print(sys.argv)
-if len(argumentos) >1: ##caso tam seja 1, quer dizer que nao possui argumentos!
-    quantum = int(argumentos[1])
-    if len(argumentos)>2:
-        arquivoentrada = argumentos[2]
-        if len(argumentos)>3:
-            arquivosaida = argumentos[3]
-            if len(argumentos)>4:
-                arquivografico = argumentos[4]
+#argumentos que podem ser modificados
+arquivoentrada = args.entrada ##nome do arquivo de entrada
+arquivosaida = args.saida ##nome do arquivo de saida
+arquivografico = args.grafico ##nome do arquivo de grafico
+quantum = args.quantum ##variavel que controla quantum
+
+
 
 
 
