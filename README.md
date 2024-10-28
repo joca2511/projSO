@@ -7,5 +7,5 @@ Extras:
 Variáveis, como o nome do arquivo de entrada, saída de dados, saída do gráfico, além do quantum utilizado podem ser modificadas pelo uso das flags -e -s -g -q, respectivamente.  
 Ex: python projSO.py -e entradateste.txt -q 3 -s saidateste.txt -g graficoteste.txt  
 Irá ter a entrada como o arquivo entradateste.txt, quantum como 3, arquivo de saida como saidateste.txt e arquivo de saída do gráfico como graficoteste.txt  
-O programa também possui uma flag de help, que pode ser acessada com a flag -h e disponibilizará todas as flags relevantes e explicações breves  
+O programa também possui uma flag de help, que pode ser acessada com a flag -h e disponibilizará todas as flags com explicações breves sobre cada  
 Ex: python projSO.py -h  
